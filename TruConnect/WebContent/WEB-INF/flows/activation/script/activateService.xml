@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="account" type="com.tscp.mvne.Account" />
+  <input name="deviceInfo" type="com.tscp.mvne.DeviceInfo" />
+  <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
+
+  <action-state id="addDeviceInfo">
+    <evaluate expression="deviceFlowManager.addDeviceInfo(deviceInfo, account, user)" />
+    <transition on="success" to="reserveMdn" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <action-state id="reserveMdn">
+    <evaluate expression="deviceFlowManager.reserveMdn(networkInfo)" />
+    <transition on="success" to="setEsn" />
+    <transition on="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <action-state id="setEsn">
+    <evaluate expression="deviceFlowManager.bindEsn(networkInfo, deviceInfo)" />
+    <transition on="success" to="activateService" />
+    <transition on="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <action-state id="activateService">
+    <evaluate expression="deviceFlowManager.activateService(networkInfo, user)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="removeDeviceInfo" />
+  </action-state>
+
+  <action-state id="removeDeviceInfo">
+    <evaluate expression="deviceFlowManager.removeDeviceInfo(deviceInfo, account, user)" />
+    <transition on="success" to="re-requestDeviceInfo" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <subflow-state id="re-requestDeviceInfo" subflow="addDevice_noAction">
+    <input name="deviceInfo" value="deviceInfo" />
+    <input name="contactInfo" value="user.contactInfo" />
+    <transition on="success" to="addDeviceInfo" />
+  </subflow-state>
+
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+  </global-transitions>
+</flow>

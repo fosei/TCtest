@@ -1,0 +1,182 @@
+/***********************************************
+Style inputs for the entire page
+************************************************/
+input[type="text"],input[type="password"],select {
+  outline: none;
+  transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -webkit-transition: all 0.25s ease-in-out;
+  height:20px;
+}
+
+input:focus,select:focus,checkbox:focus {
+  border: 1px solid #0067b2;
+  box-shadow: 0 0 5px rgba(0, 103, 178, 1);
+  -webkit-box-shadow: 0 0 5px rgba(0, 103, 178, 1);
+  -moz-box-shadow: 0 0 5px rgba(0, 103, 178, 1);
+  height:20px;
+}
+
+input.displayOnly {
+ border: none;
+}
+
+form label::after {
+  content: ':';
+}
+
+form label.required::after {
+  content: '*';
+  color: #bb0000;
+}
+
+/***********************************************
+Button styles
+************************************************/
+input[type="submit"],input[type="button"],input[type="reset"] {
+  padding: 2px 25px 2px 25px;
+}
+
+form.validatedForm .buttons {
+  text-align: right;
+  clear: both;
+  width: 100%;
+  height: 30px;
+  position: absolute;
+  bottom: 0px;
+  float: right;
+}
+
+form.validatedForm .buttons a.button {
+  float: right;
+}
+
+/***********************************************
+Form definition
+***********************************************/
+form.validatedForm {
+  position: relative;
+  padding-bottom: 40px;
+}
+
+form.validatedForm div.buttons::before {
+  float:left;
+  content: '* required information';
+  color: #bb0000;
+}
+
+form div.row {
+  clear: both;
+  min-height: 25px;
+  line-height: 25px;
+  padding: 4px;
+  position: relative;
+}
+
+/***********************************************
+Generic Validated Form - 
+formatted to allow for error messages and tooltips
+to appear on the right.
+***********************************************/
+input.validationFailed,select.validationFailed {
+  background: #FAEBE7 !important;
+}
+
+input.validationFailed:focus,select.validationFailed:focus {
+  background: #FAF6F6 !important;
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
+  -webkit-box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
+  -moz-box-shadow: 0 0 5px rgba(255, 0, 0, 0.6);
+}
+
+form.validatedForm input[type="text"],form.validatedForm input[type="password"] {
+  width: 300px;
+  margin: 0px;
+  float: left;
+  height: 20px;
+}
+
+form.validatedForm select {
+  width: 303px;
+  margin: 3px 0px 0px 0px;
+  float: left;
+}
+
+form.validatedForm label {
+  float: left;
+  width: 160px;
+  line-height: 25px;
+  font-weight: normal;
+}
+
+form.validatedForm .pushed {
+  margin: 0px 0px 0px 160px;
+}
+
+form.validatedForm span[id *="errors"] {
+  display: list-item;
+  list-style-position: inside;
+  color: #666;
+  font-size: 12px;
+  line-height: 16px;
+  margin-left: 10px;
+}
+
+form.validatedForm .padded {
+  margin: 0.2em 1em 0.2em 1em;
+}
+
+/***********************************************
+ToolTips
+these appear to the right of an input box as a 
+span
+***********************************************/
+form.validatedForm .toolTip {
+  margin-left: 8px;
+  background: #CCE0E6;
+  width: 220px;
+  z-index: 10;
+  position: absolute;
+  padding: 5px;
+  display: none;
+  font-size: 11px;
+  color: #333;
+  font-size: 11px;
+  line-height: 13px;
+  box-shadow: 1px 1px 10px #999;
+  -moz-box-shadow: 1px 1px 10px #999;
+  -webkit-box-shadow: 1px 1px 10px #999;
+  border: 1px gray dotted;
+}
+
+/** adds a left arrow to the div. left should be set to -border-width x 2 */
+form.validatedForm span.toolTip_bak:after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0px;
+  left: -20px;
+  width: 0;
+  height: 0;
+  border-color: transparent #FFFFCC transparent transparent;
+  border-style: solid;
+  border-width: 10px;
+  z-index: 10;
+}
+
+form.validatedForm span.toolTip .ttExample {
+  border-top: 1px #333 dashed;
+  padding-top: 4px;
+  margin-top: 4px;
+  color: #333;
+}
+
+form.validatedForm div.terms {
+  width: 630px;
+  height: 220px;
+  margin: 10px auto 10px auto;
+  border: 1px #404040 solid;
+  height: 200px;
+  padding: 20px;
+  overflow: auto;
+}

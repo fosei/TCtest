@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <!-- DECLARE REQUIRED OBJECTS -->
+  <var name="registration" class="com.trc.user.activation.Registration" />
+  <var name="termsAndConditions" class="com.trc.user.activation.TermsAndConditions" />
+  <var name="activationMessage" class="com.trc.user.activation.ActivationMessage" />
+  <var name="deviceInfo" class="com.tscp.mvne.DeviceInfo" />
+  <var name="networkInfo" class="com.tscp.mvne.NetworkInfo" />
+  <var name="creditCard" class="com.tscp.mvne.CreditCard" />
+  <var name="account" class="com.tscp.mvne.Account" />
+
+  <var name="creditCardPayment" class="com.trc.user.activation.CreditCardPayment" />
+
+  <!-- BEGIN GATHERING INFORMATION -->
+  <subflow-state id="requestCreditCardInfo" subflow="addCreditCard_initial">
+    <input name="user" value="registration.user" />
+    <input name="creditCardPayment" value="creditCardPayment" />
+    <transition on="success" to="requestUserInfo" />
+  </subflow-state>
+
+  <subflow-state id="requestUserInfo" subflow="addUserInfo">
+    <input name="registration" value="registration" />
+    <transition on="success" to="requestContactInfo">
+      <evaluate expression="activationLogger.startLogging(registration.user)" />
+      <evaluate expression="activationLogger.logReserveProfile()" />
+    </transition>
+  </subflow-state>
+
+  <subflow-state id="requestContactInfo" subflow="addContactInfo">
+    <input name="contactInfo" value="registration.user.contactInfo" />
+    <transition on="success" to="requestDeviceInfo">
+      <evaluate expression="activationLogger.logContactInfo()" />
+    </transition>
+  </subflow-state>
+
+  <subflow-state id="requestDeviceInfo" subflow="addDevice_noAction">
+    <input name="deviceInfo" value="deviceInfo" />
+    <input name="contactInfo" value="registration.user.contactInfo" />
+    <transition on="success" to="showPlansAndTerms">
+      <evaluate expression="activationLogger.logDeviceInfo()" />
+    </transition>
+  </subflow-state>
+
+  <view-state id="showPlansAndTerms" view="activation/terms/plansAndTerms" model="termsAndConditions">
+    <transition on="submit" to="requestCreditCardInfo" />
+  </view-state>
+
+  <!-- PROCESS ACTIVATION -->
+  <subflow-state id="processActivation" subflow="processActivation">
+    <input name="registration" value="registration" />
+    <input name="activationMessage" value="activationMessage" />
+    <input name="deviceInfo" value="deviceInfo" />
+    <input name="networkInfo" value="networkInfo" />
+    <input name="creditCard" value="creditCard" />
+    <input name="account" value="account" />
+    <transition on="success" to="success" />
+    <transition on="generalError" to="generalError" />
+  </subflow-state>
+
+  <!-- END STATES -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <end-state id="success" view="activation/registration/success">
+    <on-entry>
+      <evaluate expression="activationLogger.finishLogging()" />
+    </on-entry>
+  </end-state>
+
+  <end-state id="cancel" view="externalRedirect:contextRelative:/">
+    <on-entry>
+      <evaluate expression="registrationManager.cancelRegistration(registration)" />
+    </on-entry>
+  </end-state>
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on="generalError" to="generalError" validate="false" />
+  </global-transitions>
+</flow> 

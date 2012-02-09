@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:jee="http://www.springframework.org/schema/jee"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd">
+
+  <jee:jndi-lookup id="dataSource" jndi-name="jdbc/TrcMySql" />
+
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <property name="annotatedClasses">
+      <list>
+        <value>com.trc.util.logger.activation.ActivationStateId</value>
+        <value>com.trc.util.logger.activation.ActivationMap</value>
+        <value>com.trc.util.logger.activation.ActivationState</value>
+        <value>com.trc.user.User</value>
+        <value>com.trc.user.authority.Authority</value>
+        <value>com.trc.user.security.SecurityQuestion</value>
+        <value>com.trc.coupon.Coupon</value>
+        <value>com.trc.coupon.CouponDetail</value>
+        <value>com.trc.coupon.contract.Contract</value>
+        <value>com.trc.coupon.UserCoupon</value>
+        <value>com.trc.coupon.UserCouponId</value>
+        <value>com.trc.coupon.CouponStackable</value>
+        <value>com.trc.coupon.CouponStackableId</value>
+        <value>com.trc.coupon.CouponDetailType</value>
+      </list>
+    </property>
+    <property name="hibernateProperties">
+      <props>
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+        <prop key="hibernate.cache.provider_class">org.hibernate.cache.NoCacheProvider</prop>
+        <prop key="hibernate.show_sql">true</prop>
+        <prop key="hibernate.format_sql">true</prop>
+        <prop key="hibernate.use_sql_comments">${hibernate.use_sql_comments}</prop>
+        <prop key="hibernate.current_session_context_class">thread</prop>
+        <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</prop>
+        <!-- <prop key="hibernate.id.new_generator_mappings">true</prop> -->
+      </props>
+    </property>
+  </bean>
+
+  <bean id="transactionInterceptor" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+    <property name="transactionManager" ref="transactionManager" />
+    <property name="transactionAttributes">
+      <props>
+        <prop key="save">PROPAGATION_REQUIRED</prop>
+      </props>
+    </property>
+  </bean>
+
+  <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+    <property name="dataSource" ref="dataSource" />
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
+  <bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+</beans>

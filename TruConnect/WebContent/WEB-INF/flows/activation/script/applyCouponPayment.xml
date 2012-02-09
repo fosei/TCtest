@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="account" type="com.tscp.mvne.Account" />
+  <input name="creditCard" type="com.tscp.mvne.CreditCard" />
+  <input name="coupon" type="com.trc.coupon.Coupon" />
+
+  <action-state id="applyCouponPayment">
+    <on-entry>
+      <evaluate expression="activationLogger.logApplyCouponPayment()" />
+    </on-entry>
+    <evaluate expression="couponFlowManager.applyCouponPayment(coupon, user, account)" />
+    <transition on="success" to="isExistingCard" />
+  </action-state>
+
+  <decision-state id="isExistingCard">
+    <if test="paymentFlowManager.isExistingCard(creditCard)" then="success" else="addCreditCard" />
+  </decision-state>
+
+  <action-state id="addCreditCard">
+    <on-entry>
+      <evaluate expression="creditCardPayment.creditCard.setPaymentid(0)" />
+    </on-entry>
+    <evaluate expression="paymentFlowManager.addPaymentMethod(registration.user, creditCardPayment.creditCard)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="re-requestCreditCardInfo" />
+  </action-state>
+
+  <subflow-state id="re-requestCreditCardInfo" subflow="addCreditCard_noAction">
+    <input name="user" value="user" />
+    <input name="creditCard" value="creditCard" />
+    <transition on="success" to="isExistingCard" />
+  </subflow-state>
+
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+  </global-transitions>
+
+</flow>

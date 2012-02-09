@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="account" type="com.tscp.mvne.Account" />
+  <input name="networkInfo" type="com.tscp.mvne.NetworkInfo" />
+  <input name="coupon" type="com.trc.coupon.Coupon" />
+
+  <decision-state id="checkCouponContract">
+    <on-entry>
+      <evaluate expression="activationLogger.logCheckCouponContract()" />
+    </on-entry>
+    <if test="coupon.isContract()" then="applyContract" else="noContract" />
+  </decision-state>
+
+  <action-state id="applyContract">
+    <on-entry>
+      <evaluate expression="activationLogger.logApplyContract()" />
+    </on-entry>
+    <evaluate expression="couponFlowManager.applyCoupon(coupon, user, account, networkInfo.mdn)" />
+    <transition on="success" to="contractApplied" />
+  </action-state>
+
+  <end-state id="contractApplied" />
+  <end-state id="noContract" />
+
+</flow>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="contactInfo" type="com.trc.user.contact.ContactInfo" />
+
+  <on-start>
+    <evaluate expression="contactInfo.address.setAddressId(0)" />
+  </on-start>
+
+  <view-state id="requestContactInfo" view="activation/registration/addContactInfo" model="contactInfo">
+    <transition on="submit" to="success" />
+  </view-state>
+
+  <!-- End States -->
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+  </global-transitions>
+</flow>

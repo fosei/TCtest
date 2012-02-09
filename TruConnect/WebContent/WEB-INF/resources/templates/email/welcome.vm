@@ -1,0 +1,34 @@
+<!--<html>
+<body >
+<div>
+	<div style="border-bottom:1px solid #999; margin-bottom:15px; font-size:15px;">
+		<img src="https://activate.truconnect.com/static/images/logo/logo_s1.jpg">
+	</div>
+	<div style="width: 95%; margin:0px auto;">
+		<h3 style="color:gray;">Welcome to TruConnect</h3>
+		<p>Thank you for registering at TruConnect.com!</p>
+		<p>Before you can view your profile and services you'll have to activate your online account. Just click the following link to get started.</p>
+		<a href='https://activate.truconnect.com/TruConnect/registration/activate?id=${user.userId}&code=${code}'>Activate your TruConnect account</a>
+	</div>
+</div>
+</body>
+</html>-->
+<html>
+<body >
+<div>
+	<div style="border-bottom:1px solid #999; margin-bottom:15px; font-size:15px;">
+		<img src="https://activate.truconnect.com/static/images/logo/logo_s1.jpg">
+	</div>
+	<div style="width: 95%; margin:0px auto;">
+		<h3 style="color:gray;">Welcome to TruConnect</h3>
+		<!--<div style="color:#306EFF; font-size:1.25em; background:#EAEAEA">
+			<b>Welcome to TruConnect</b>
+		</div>-->
+		<p>Thank you for setting up a TruConnect account. Before you can log in to your account, 
+		it needs to be activated. Click the link below to activate your account.</p>
+		<a href='https://activate.truconnect.com/TruConnect/registration/activate?id=${user.userId}&code=${code}'>Activate my TruConnect account</a>
+		<p>If you have any questions, please visit our <a href="http://support.truconnect.com">support page</a></p>
+	</div>
+</div>
+</body>
+</html>

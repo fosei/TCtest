@@ -1,0 +1,241 @@
+2.8.0.1
+-------------------------------------------------------------
+- removed temporary check for the string "tru" in coupon validation
+
+2.8
+-------------------------------------------------------------
+- created com.trc.config.Config to load properties files for all
+  changeable properties of the web application
+
+2.7.1
+-------------------------------------------------------------
+- updated RetrieveController to point to correct error page when
+  updating password
+- updated RetrieveController, no longer shows an error page if
+  the requested user does not exist
+
+2.7
+-------------------------------------------------------------
+- major coupon update. needs to be documented
+
+
+2.5.6
+-------------------------------------------------------------
+- created pages for entering coupons during activation and in management
+- added jquery to management coupon page to shuffle between form pages
+  rather than created multiple pages
+- modified WEB-INF/includes/display/usageDetail.jsp to show coupon discounts
+
+2.5.5
+-------------------------------------------------------------
+- updated jquery to v1.7
+- begin implementation of coupon classes and manager
+
+
+2.5
+-------------------------------------------------------------
+- first iteration of JMS implementation for Kenan activations
+- added logic in AddressFlowManager.addAddress() to check
+  if the address should be default
+
+2.4.3.1
+-------------------------------------------------------------
+- cleaned up includes/admin/control_bar.jsp
+- separated css and js files for control_bar.jsp
+- optimized jquery and ajax calls for admin
+- added detailed device and account information for the admin
+  on the devices page
+- wsimport of new tscpmvne.jar with new method getCustInfo
+
+2.4.3
+-------------------------------------------------------------
+- re-factored Registration Logging class to "Activation*"
+- added transition logging in flows "registration" and
+  "activateAdditionalDevice"
+- better organized file/folder structure of flows
+- better organized file/folder structure of views
+- better organized file/folder structure of resources/messages/emailTemplates
+- separated address insertion from account creation
+- added weblfow decision-states for existing addresses
+  and payment methods in "makeActivationPayment" and
+  "createShellAccount"
+- removed old jsp and css files
+
+2.4.2
+-------------------------------------------------------------
+- created parent/child mapping with composite foreign key
+  in hibernate
+- created classes RegistrationLogger, RegistrationMap,
+  RegistrationLogger, Node, NodeLogger for tree-mapping
+  of activation states
+
+2.4.1
+-------------------------------------------------------------
+Classes
+- extracted interface for encryption classes
+- StringEncrypter and BlowfishCipher now implement Encrypter
+- created abstract EncryptedController class
+- AccountController, DeviceController, PaymentController,
+  ProfileController now extend EncryptedController
+- deprecated constructors for UsageHistory and PaymentHistory.
+  Created new constructors that take the input directly rather
+  than taking in the *Manager
+
+- deprecated and removed Device class and now reference DeviceInfo
+  directly
+
+WebFlow
+- added generalError state to webflow
+- heavy optimization of registration webflow
+- created self contained subflows with error states
+    - /WEB-INF/flows/registration/activateService.xml
+    - /WEB-INF/flows/registration/addCreditCard_noAction.xml
+    - /WEB-INF/flows/registration/addDevice_noAction.xml
+    - /WEB-INF/flows/registration/createShellAccount.xml
+    - /WEB-INF/flows/registration/makeActivationPayment.xml
+    - /WEB-INF/flows/registration/testActivation.xml
+    
+- moved methods in com.trc.manager.webflow classes around for better
+  separation of concerns
+- deprecated old methods in AccountFlowManager
+- created new methods that take in and populate objects for webflow
+
+2.4
+-------------------------------------------------------------
+- created interfaces for all DAO classes
+- separated all DAOs into @repository classes
+- created interfaces for all *Manager classes
+- created @Service *Manager classes to access DAO objects
+
+- separated TruConnect webservice methods into separate @Service classes
+  based on the object they modified
+- removed direct injection of TruConnect webservice from *Manager classes
+  and wired in new @Service classes
+- renamed NetworkManager to DeviceManager for clarity
+- moved device management methods from AccountManager to DeviceManager
+- moved payment management methods from AccountManager to PaymentManager
+
+- created new StringEncrypter class to solve bit-padding exception with URL
+  encoding
+- modified StringEncrypter to do two passes on URL encoding to avoid %2F errors
+
+- modified LoggingAspect to give cleaner output
+
+- modified UserManager to return the sessionId as username for anonymous users
+
+- created custom ModelAndView extension, ResultModel to handle success and error
+  views
+
+- changed GatewayException to a non-runtime exception
+- created custom exceptions for each @Service class
+- created custom exceptions for each *Manager class
+
+- created SessionKey class to hold global keys for session attributes
+- created lookup table in SessionManager for SessionKey values
+- modified CacheManager to use SessionManager
+- created CacheKey class to hold global keys for cached objects
+- created lookup table in CacheManager for CacheKey values
+
+- stored objects to be modified in DeviceController in session rather
+  than do a lookup
+    
+2.3.1
+-------------------------------------------------------------
+Webflow
+- separated rollback calls on payment failure in registration.xml
+- added general error state to registration.xml to avoid looping states
+  on exception.
+  
+Classes
+- patched networkManager.swapDevice() to query for the old deviceInfo
+  before attempting the swap
+
+Javascript
+- updated jquery to 1.6.4
+
+JSP
+- updated links on registration/success.jsp
+
+2.2.0.1 (9/6/2011)
+-------------------------------------------------------------
+- updated registration.xml flow to add new error states "retry_payment"
+  and "retry_prepareActivation" to work with new rollback methods.
+
+2.3
+-------------------------------------------------------------
+Configuration
+- added RequestContextListener in web.xml to bind threads to
+  sessions
+
+Classes
+- changed method userManager.getUser(session) to getCurrentUser()
+  and getLoggedInUser() to allow for user administration
+- created SessionManager class to hold RequestContext
+- removed HttpSession as a parameter from all controller classes
+  in favor of using SessionManager  
+
+1.9.3
+-------------------------------------------------------------
+Model
+  - added custAddress class
+  - custTopUp now includes account number
+
+Configuration
+  - fixed file logging to write to truconnect.log
+  - changed log4j to use xml configuration
+
+Removed/Deprecated Classes & Files
+  - removed PaymentController and PaymentMethodController
+  - removed Transaction flow object
+  - removed PaymentValidator
+  - removed UserValidator
+  - removed TopUpController
+
+Web.xml
+  - separated webflow xml config into a separate file
+	
+WebFlow
+  - declare variables at flow start to allow for persistent state
+    registration.xml & addNewDevice.xml
+  - activate device before taking payment
+  - rollback activation if payment fails
+	
+HomeController
+  - modified initial check for contextPath now that the Spring config files have been moved
+	
+AccountController
+  - prevents user from removing payment methods if only 1 remains
+
+Overview
+  - removed old method of filtering usageDetails to get paymentHistory
+  - moved AccountDetail subclass to it's own file
+
+AccountDetail
+  - added topUp(String)
+	
+com.trc.web.manager.*Manager
+  - separated webflow logic from the package into com.trc.web.manager.flow.*Manager
+	
+LoggingAspect
+  - modified to always output user_id and parameter type
+	
+
+JSP Changes
+-------------------------------------------------------------
+removed javascript page dependencies
+standardized form/button labeling for jquery setup
+updated footer to truconect.com footer
+dollar amounts now show to the nearest thousandth place (0.000)
+
+
+editCreditCard.jsp
+	- fixed javascript bindings to submit function
+	- fixed jquery to properly set the expiration date
+includes/display/usageDetailEventBoxjsp
+	- formatted the minutes in the timestamp to always display two characters (e.g. "00")
+
+JQuery Changes
+-------------------------------------------------------------
+create form behavior dynamically by calling "setupForms" with standardized form labeling
+
+		

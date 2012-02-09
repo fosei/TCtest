@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:beans="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+
+  <global-method-security pre-post-annotations="enabled" secured-annotations="enabled" />
+
+  <http auto-config="false" use-expressions="true" entry-point-ref="authenticationProcessingFilterEntryPoint">
+    <custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
+    <custom-filter position="FORM_LOGIN_FILTER" ref="myAuthFilter" />
+    <session-management session-authentication-strategy-ref="sas" />
+    <!-- 
+    <intercept-url pattern="/coupons/validate" filters="none" />
+    <intercept-url pattern="/flowDev/**" filters="none" /> 
+    <intercept-url pattern="/test/**" filters="none" /> 
+    -->
+    <intercept-url pattern="/static/**" filters="none" />
+    <intercept-url pattern="/favicon.ico" filters="none" />
+    <intercept-url pattern="/" access="permitAll" />
+    <intercept-url pattern="/home" access="permitAll" />
+    <intercept-url pattern="/login" access="permitAll" />
+    <intercept-url pattern="/accessDenied" access="permitAll" />
+    <intercept-url pattern="/registration/**" access="permitAll" />
+    <intercept-url pattern="/activation" access="permitAll" />
+    <intercept-url pattern="/manage" access="permitAll" />
+    <intercept-url pattern="/retrieve/**" access="permitAll" />
+    <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')" />
+    <intercept-url pattern="/**" access="isAuthenticated()" />
+    <access-denied-handler error-page="/exception/accessDenied.jsp" />
+    <logout invalidate-session="true" logout-success-url="http://www.truconnect.com/" />
+  </http>
+
+  <!-- Begin Concurrency Filters -->
+  <beans:bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+    <beans:property name="loginFormUrl" value="/login" />
+    <beans:property name="forceHttps" value="false" />
+  </beans:bean>
+
+  <beans:bean id="concurrencyFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+    <beans:property name="sessionRegistry" ref="sessionRegistry" />
+    <beans:property name="expiredUrl" value="/timeout" />
+  </beans:bean>
+
+  <!-- <beans:bean id="myAuthFilter" class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter"> -->
+  <beans:bean id="myAuthFilter" class="com.trc.web.security.authentication.MyAuthenticationProcessingFilter">
+    <beans:property name="sessionAuthenticationStrategy" ref="sas" />
+    <beans:property name="authenticationManager" ref="truConnectAuthentication" />
+    <beans:property name="authenticationFailureHandler" ref="failureHandler" />
+    <beans:property name="authenticationSuccessHandler" ref="successHandler" />
+  </beans:bean>
+
+  <!-- <beans:bean id="successHandler" class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler"> -->
+  <beans:bean id="successHandler" class="com.trc.web.security.authentication.MySavedRequestAwareAuthenticationSuccessHandler">
+    <beans:property name="defaultTargetUrl" value="/manage" />
+  </beans:bean>
+  <beans:bean id="failureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+    <beans:property name="defaultFailureUrl" value="/login?login_error=1" />
+  </beans:bean>
+
+  <beans:bean id="sas" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+    <beans:constructor-arg name="sessionRegistry" ref="sessionRegistry" />
+    <beans:property name="maximumSessions" value="1" />
+  </beans:bean>
+
+  <beans:bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+  <!-- End Concurrency Filters -->
+
+  <!-- Begin Custom UserDetailsService -->
+  <beans:bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+    <beans:property name="providers">
+      <beans:list>
+        <beans:ref local="daoAuthenticationProvider" />
+      </beans:list>
+    </beans:property>
+  </beans:bean>
+
+  <beans:bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+    <beans:property name="userDetailsService" ref="myUserDetailsService" />
+  </beans:bean>
+
+  <beans:bean id="myUserDetailsService" class="com.trc.web.security.authentication.MyUserDetailsService">
+    <beans:property name="userManager" ref="userManager" />
+    <!-- <beans:property name="assembler" ref="assembler" /> -->
+  </beans:bean>
+
+  <!-- <beans:bean id="assembler" class="com.trc.web.security.authentication.Assembler"></beans:bean> <beans:bean id="userManager" class="com.trc.web.manager.UserManager"> 
+    <beans:property name="sessionFactory" ref="sessionFactory" /> <beans:property name="authenticationManager" ref="truConnectAuthentication" /> </beans:bean> 
+    <beans:bean id="userManagerProxy" class="org.springframework.aop.framework.ProxyFactoryBean"> <beans:property name="target" ref="userManager" /> 
+    <beans:property name="interceptorNames"> <beans:list> <beans:value>transactionInterceptor</beans:value> </beans:list> </beans:property> </beans:bean> -->
+
+  <authentication-manager alias="truConnectAuthentication">
+    <authentication-provider user-service-ref="myUserDetailsService">
+      <password-encoder hash="md5" />
+    </authentication-provider>
+  </authentication-manager>
+  <!-- End Custom UserDetailsService -->
+
+</beans:beans>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="account" type="com.tscp.mvne.Account" />
+
+  <action-state id="createShellAccount">
+    <evaluate expression="accountFlowManager.createShellAccount(user, account)" />
+    <transition on="success" to="isNewAddress" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="re-requestContactInfo" />
+  </action-state>
+
+  <decision-state id="isNewAddress">
+    <if test="addressFlowManager.isNewAddress(user.contactInfo.address)" then="insertCustomerAddress" else="success" />
+  </decision-state>
+
+  <action-state id="insertCustomerAddress">
+    <evaluate expression="addressFlowManager.addAddress(user, user.contactInfo.address)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="re-requestContactInfo" />
+  </action-state>
+
+  <subflow-state id="re-requestContactInfo" subflow="addContactInfo">
+    <input name="contactInfo" value="user.contactInfo" />
+    <transition on="success" to="createShellAccount" />
+  </subflow-state>
+
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+  </global-transitions>
+</flow>

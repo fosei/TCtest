@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="deviceInfo" type="com.tscp.mvne.DeviceInfo" />
+  <input name="contactInfo" type="com.trc.user.contact.ContactInfo" />
+
+  <view-state id="requestDeviceInfo" view="activation/device/addDevice" model="deviceInfo">
+    <on-entry>
+      <evaluate expression="deviceFlowManager.setDefaultDeviceLabel(deviceInfo, contactInfo.firstName)" />
+    </on-entry>
+    <transition on="submit" to="success" />
+  </view-state>
+
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+  </global-transitions>
+</flow>

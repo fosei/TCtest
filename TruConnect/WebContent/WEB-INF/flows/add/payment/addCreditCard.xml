@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="creditCard" type="com.tscp.mvne.CreditCard" />
+
+  <view-state id="requestCreditCard" view="payment/addCreditCard" model="creditCard">
+    <on-entry>
+      <evaluate expression="addressFlowManager.getAddresses(user)" result="viewScope.addresses" />
+    </on-entry>
+    <transition on="submit" to="addCreditCard" />
+  </view-state>
+
+  <action-state id="addCreditCard">
+    <evaluate expression="accountFlowManager.addPaymentMethod(user, creditCard)" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="requestCreditCard" />
+  </action-state>
+
+  <!-- End States -->
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+  <end-state id="generalError" view="exception/uncaughtException" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+  </global-transitions>
+</flow>

@@ -1,0 +1,119 @@
+#admin_control_bar {
+  background: #f1f1f1;
+  -moz-box-shadow: 0px 5px 5px #ccc;
+  -webkit-box-shadow: 0px 5px 5px #ccc;
+  box-shadow: 0px 5px 5px #ccc;
+  border-bottom: 2px #888 solid;
+  height: 70px;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  z-index: 2;
+}
+
+#admin_control_bar .logo {
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+#admin_control_bar .logout {
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  font-family: consolas;
+  font-size: 16px;
+}
+
+#admin_control_bar .currentUser {
+  text-align: center;
+  font-size: 16px;
+  background: #f1f1f1;
+  border: #666 solid;
+  border-top: #ddd solid;
+  border-width: 2px 2px 2px 0px;
+  -moz-box-shadow: 0px 5px 5px #ccc;
+  -webkit-box-shadow: 0px 5px 5px #ccc;
+  box-shadow: 0px 5px 5px #ccc;
+  -moz-border-radius-bottomright: 50px;
+  border-bottom-right-radius: 50px;
+  height: 23px;
+  width: 310px;
+  position: absolute;
+  bottom: -27px;
+  z-index: 1;
+  box-shadow: 0px 5px 5px #ccc;
+}
+
+#admin_control_bar #adminControl {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  z-index: 10;
+  width: 600px;
+}
+
+#admin_control_bar #adminControl #admin_search_results {
+  z-index: 10;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: white;
+  display: none;
+  border: #666 solid;
+  border-width: 0px 1px 1px 1px;
+  margin-top: 0px;
+  width: 300px;
+  -moz-box-shadow: 5px 5px 5px #ccc;
+  -webkit-box-shadow: 5px 5px 5px #ccc;
+  box-shadow: 0px 5px 5px #ccc;
+}
+
+#admin_control_bar #adminControl #admin_search_email {
+  width: 300px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+#admin_control_bar #admin_search_email_results_list {
+  list-style: none;
+  margin: 3px;
+  padding: 0px;
+  width: 150%;
+  list-style: none;
+}
+
+#admin_control_bar #admin_search_email_results_list li span.id {
+  float: left;
+  text-align: right;
+  width: 25px;
+}
+
+.admin_tooltip {
+  background: #eee;
+  padding: 0px 15px 0px 15px;
+  position: absolute;
+  border: 1px black solid;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 5px 5px 5px #ccc;
+  -webkit-box-shadow: 5px 5px 5px #ccc;
+  box-shadow: 5px 5px 5px #ccc;
+  width: 240px;
+}
+
+.admin_tooltip li, .device_detail li {
+  list-style: none;
+}
+
+.admin_tooltip div, .device_detail div {
+  margin: 10px 0px 10px 0px;
+}
+
+.admin_tooltip li.header, .device_detail li.header {
+  font-weight: bold;
+  border-bottom: 1px #121212 solid;
+  width: 100%;
+  border-bottom: 1px #121212 solid;
+}

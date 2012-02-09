@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="coupon" type="com.trc.coupon.Coupon" />
+
+  <action-state id="fetchCoupon">
+    <evaluate expression="couponFlowManager.getCouponByCode(coupon)" result="flowScope.fetchedCoupon" />
+    <transition on="success" to="isCoupon">
+      <evaluate expression="couponFlowManager.setCoupon(coupon, fetchedCoupon)" />
+    </transition>
+  </action-state>
+
+  <decision-state id="isCoupon">
+    <on-entry>
+      <evaluate expression="activationLogger.logHasCoupon(coupon)" />
+    </on-entry>
+    <if test="couponFlowManager.hasCoupon(coupon)" then="isCouponPayment" else="noCoupon" />
+  </decision-state>
+
+  <decision-state id="isCouponPayment">
+    <on-entry>
+      <evaluate expression="activationLogger.logIsCouponPayment()" />
+    </on-entry>
+    <if test="couponFlowManager.isCouponPayment(coupon)" then="hasCouponPayment" else="hasRecurringCoupon" />
+  </decision-state>
+
+  <end-state id="hasCouponPayment" />
+  <end-state id="hasRecurringCoupon" />
+  <end-state id="noCoupon" />
+
+</flow>

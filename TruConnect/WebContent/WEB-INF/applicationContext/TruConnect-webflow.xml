@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flow="http://www.springframework.org/schema/webflow-config"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+  http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://www.springframework.org/schema/webflow-config  
+  http://www.springframework.org/schema/webflow-config/spring-webflow-config-2.3.xsd">
+
+  <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+
+  <bean id="flowUrlMappings" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+    <property name="mappings">
+      <value>
+        /flowDev=flowController
+        /addCreditCard=flowController
+        /activateAdditionalDevice=flowController
+        /registration=flowController
+      </value>
+    </property>
+    <property name="alwaysUseFullPath" value="true" />
+  </bean>
+
+  <bean id="flowController" class="org.springframework.webflow.mvc.servlet.FlowController">
+    <property name="flowExecutor" ref="flowExecutor" />
+  </bean>
+
+  <flow:flow-executor id="flowExecutor" flow-registry="flowRegistry" />
+
+  <flow:flow-registry id="flowRegistry" flow-builder-services="flowBuilderServices">
+    <flow:flow-location path="/WEB-INF/flows/flowDev.xml" />
+    <flow:flow-location path="/WEB-INF/flows/add/payment/addCreditCard_initial.xml" />
+
+    <flow:flow-location path="/WEB-INF/flows/activation/activateAdditionalDevice.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/registration.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/processActivation.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/activateService.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/createShellAccount.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/makeActivationPayment.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/testActivation.xml" />
+
+    <flow:flow-location path="/WEB-INF/flows/activation/script/applyCouponContract.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/applyCouponPayment.xml" />
+    <flow:flow-location path="/WEB-INF/flows/activation/script/checkCoupon.xml" />
+
+    <flow:flow-location path="/WEB-INF/flows/add/contact/addContactInfo.xml" />
+    <flow:flow-location path="/WEB-INF/flows/add/device/addDevice_noAction.xml" />
+    <flow:flow-location path="/WEB-INF/flows/add/payment/addCreditCard_noAction.xml" />
+    <flow:flow-location path="/WEB-INF/flows/add/user/addUserInfo.xml" />
+    <flow:flow-location path="/WEB-INF/flows/choose/payment/choosePaymentMethod.xml" />
+  </flow:flow-registry>
+
+  <flow:flow-builder-services id="flowBuilderServices" view-factory-creator="viewFactoryCreator" />
+
+  <bean id="viewFactoryCreator" class="org.springframework.webflow.mvc.builder.MvcViewFactoryCreator">
+    <property name="viewResolvers">
+      <list>
+        <ref bean="viewResolver" />
+      </list>
+    </property>
+  </bean>
+
+</beans>

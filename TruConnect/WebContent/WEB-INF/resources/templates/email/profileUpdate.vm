@@ -1,0 +1,17 @@
+<html>
+<body >
+<div>
+	<div style="border-bottom:1px solid #999; margin-bottom:15px; font-size:15px;">
+		<img src="https://activate.truconnect.com/static/images/logo/logo_s1.jpg">
+	</div>
+	<div style="width: 95%; margin:0px auto;">
+		<h3 style="color:gray;">Your Email Has Been Updated</h3>
+		<p>Your TruConnect account has recently had it's email changed.</p>
+		<p>
+			In order to ensure security, please verify that this is a valid email address by following this 
+			<a href="https://activate.truconnect.com/TruConnect/profile/update/email/verify/${sessionId}">link.</a>
+		</p>
+	</div>
+</div>
+</body>
+</html>

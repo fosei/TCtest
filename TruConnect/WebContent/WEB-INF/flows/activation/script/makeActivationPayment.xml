@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <input name="user" type="com.trc.user.User" />
+  <input name="account" type="com.tscp.mvne.Account" />
+  <input name="creditCard" type="com.tscp.mvne.CreditCard" />
+
+  <decision-state id="isExistingCard">
+    <if test="paymentFlowManager.isExistingCard(creditCard)" then="makePayment" else="addCreditCard" />
+  </decision-state>
+
+  <action-state id="addCreditCard">
+    <on-entry>
+      <evaluate expression="creditCard.setPaymentid(0)" />
+    </on-entry>
+    <evaluate expression="paymentFlowManager.addPaymentMethod(user, creditCard)" />
+    <transition on="success" to="makePayment" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="re-requestCreditCardInfo" />
+  </action-state>
+
+  <action-state id="makePayment">
+    <evaluate expression="paymentFlowManager.makeActivationPayment(user, account, creditCard)" result="flowScope.paymentUnitResponse" />
+    <transition on="success" to="success" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="rollback_decide_deletePaymentMethod" />
+  </action-state>
+
+  <decision-state id="rollback_decide_deletePaymentMethod">
+    <if test="paymentFlowManager.isExistingCard(creditCard)" then="re-requestCreditCardInfo" else="rollback_deletePaymentMethod" />
+  </decision-state>
+
+  <action-state id="rollback_deletePaymentMethod">
+    <evaluate expression="paymentFlowManager.removePaymentMethod(user, creditCard)" />
+    <transition on="success" to="re-requestCreditCardInfo" />
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <subflow-state id="re-requestCreditCardInfo" subflow="addCreditCard_noAction">
+    <input name="user" value="user" />
+    <input name="creditCard" value="creditCard" />
+    <transition on="success" to="isExistingCard" />
+  </subflow-state>
+
+  <!-- End States -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="externalRedirect:contextRelative:/" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- Global Transitions -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+  </global-transitions>
+</flow>

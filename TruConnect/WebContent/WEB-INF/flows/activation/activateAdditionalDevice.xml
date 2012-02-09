@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/webflow  
+    http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+  <var name="deviceInfo" class="com.tscp.mvne.DeviceInfo" />
+  <var name="creditCard" class="com.tscp.mvne.CreditCard" />
+  <var name="termsAndConditions" class="com.trc.user.activation.TermsAndConditions" />
+  <var name="account" class="com.tscp.mvne.Account" />
+  <var name="networkInfo" class="com.tscp.mvne.NetworkInfo" />
+  <var name="activationMessage" class="com.trc.user.activation.ActivationMessage" />
+
+  <on-start>
+    <evaluate expression="externalContext.sessionMap.user" result="flowScope.user" />
+    <evaluate expression="accountFlowManager.getDefaultContactInfo(user)" result="flowScope.contactInfo" />
+    <evaluate expression="user.setContactInfo(contactInfo)" />
+  </on-start>
+
+  <subflow-state id="requestDeviceInfo" subflow="addDevice_noAction">
+    <input name="deviceInfo" value="deviceInfo" />
+    <input name="contactInfo" value="contactInfo" />
+    <transition on="success" to="choosePaymentMethod">
+      <evaluate expression="activationLogger.startLogging(user)" />
+      <evaluate expression="activationLogger.logDeviceInfo()" />
+    </transition>
+  </subflow-state>
+
+  <subflow-state id="choosePaymentMethod" subflow="choosePaymentMethod">
+    <input name="user" value="user" />
+    <input name="creditCard" value="creditCard" />
+    <transition on="success" to="showPlansAndTerms">
+      <evaluate expression="activationLogger.logPaymentInfo()" />
+    </transition>
+  </subflow-state>
+
+  <view-state id="showPlansAndTerms" view="activation/terms/plansAndTerms" model="termsAndConditions">
+    <transition on="submit" to="processing_createShellAccount" />
+  </view-state>
+
+  <!-- BEGIN PROCESSING -->
+  <view-state id="processing_createShellAccount" view="activation/processing/processingMessage" model="activationMessage">
+    <on-entry>
+      <evaluate expression="activationMessage.setMessageCreateBilling()" />
+    </on-entry>
+    <transition on="autoSubmit" to="createShellAccount" validate="false" />
+  </view-state>
+
+  <subflow-state id="createShellAccount" subflow="createShellAccount">
+    <input name="user" type="com.trc.user.User" value="user" />
+    <input name="account" type="com.tscp.mvne.Account" value="account" />
+    <transition on="success" to="processing_testActivation">
+      <evaluate expression="activationLogger.logCreateBilling()" />
+    </transition>
+  </subflow-state>
+
+  <view-state id="processing_testActivation" view="activation/processing/processingMessage" model="activationMessage">
+    <on-entry>
+      <evaluate expression="activationMessage.setMessageTestingActivation()" />
+    </on-entry>
+    <transition on="autoSubmit" to="testActivation" validate="false" />
+  </view-state>
+
+  <subflow-state id="testActivation" subflow="testActivation">
+    <input name="user" value="user" />
+    <input name="account" value="account" />
+    <input name="deviceInfo" value="deviceInfo" />
+    <input name="networkInfo" value="networkInfo" />
+    <transition on="success" to="processing_makeActivationPayment">
+      <evaluate expression="activationLogger.logTestActivation()" />
+    </transition>
+  </subflow-state>
+
+  <view-state id="processing_makeActivationPayment" view="activation/processing/processingMessage" model="activationMessage">
+    <on-entry>
+      <evaluate expression="activationMessage.setMessagePayment()" />
+    </on-entry>
+    <transition on="autoSubmit" to="makeActivationPayment" validate="false" />
+  </view-state>
+
+  <subflow-state id="makeActivationPayment" subflow="makeActivationPayment">
+    <input name="user" value="user" />
+    <input name="account" value="account" />
+    <input name="creditCard" value="creditCard" />
+    <transition on="success" to="processing_activateService">
+      <evaluate expression="activationLogger.logPayment()" />
+    </transition>
+  </subflow-state>
+
+  <view-state id="processing_activateService" view="activation/processing/processingMessage" model="activationMessage">
+    <on-entry>
+      <evaluate expression="activationMessage.setMessageActivation()" />
+    </on-entry>
+    <transition on="autoSubmit" to="activateService" validate="false" />
+  </view-state>
+
+  <subflow-state id="activateService" subflow="activateService">
+    <input name="user" value="user" />
+    <input name="account" value="account" />
+    <input name="deviceInfo" value="deviceInfo" />
+    <input name="networkInfo" value="networkInfo" />
+    <transition on="success" to="processing_createService">
+      <evaluate expression="activationLogger.logActivation()" />
+    </transition>
+  </subflow-state>
+
+  <view-state id="processing_createService" view="activation/processing/processingMessage" model="activationMessage">
+    <on-entry>
+      <evaluate expression="activationMessage.setMessageCreateService()" />
+    </on-entry>
+    <transition on="autoSubmit" to="createService" validate="false" />
+  </view-state>
+
+  <action-state id="createService">
+    <evaluate expression="deviceFlowManager.createServiceInstance(account, networkInfo)" />
+    <transition on="success" to="sendWebServiceActivationEmail">
+      <evaluate expression="activationLogger.logCreateService()" />
+    </transition>
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <action-state id="sendWebServiceActivationEmail">
+    <evaluate expression="registrationManager.sendActivationEmail(user, account)" />
+    <transition on="success" to="success">
+      <evaluate expression="activationLogger.logWelcome()" />
+    </transition>
+    <transition on-exception="com.trc.exception.WebFlowException" to="generalError" />
+  </action-state>
+
+  <!-- END STATES -->
+  <end-state id="generalError" view="exception/uncaughtException" />
+  <end-state id="success" view="activation/activateAdditionalDevice/success" />
+  <end-state id="cancel" view="externalRedirect:contextRelative:/" />
+
+  <!-- GLOBAL TRANSITIONS -->
+  <global-transitions>
+    <transition on="cancel" to="cancel" validate="false" />
+    <transition on="generalError" to="generalError" validate="false" />
+  </global-transitions>
+</flow>

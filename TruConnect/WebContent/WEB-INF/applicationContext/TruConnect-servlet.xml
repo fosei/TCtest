@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+  <!-- MVC -->
+  <mvc:annotation-driven />
+  <mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
+
+  <!-- Transaction Manager -->
+  <tx:annotation-driven proxy-target-class="true" />
+
+  <!-- AOP Auto Proxy -->
+  <aop:aspectj-autoproxy />
+  <!--<aop:config> <aop:advisor advice-ref="customizableTraceInterceptor" pointcut="execution(public * com.trc.manager..*(..))" /> </aop:config> -->
+
+  <!-- Begin Component Scan -->
+  <context:component-scan base-package="com.trc.config.**" />
+  <context:component-scan base-package="com.trc.coupon.**" />
+  <context:component-scan base-package="com.trc.dao.**" />
+  <context:component-scan base-package="com.trc.service.**" />
+  <context:component-scan base-package="com.trc.manager.**" />
+  <context:component-scan base-package="com.trc.web.controller.**" scoped-proxy="targetClass" />
+  <context:component-scan base-package="com.trc.web.context.**" />
+  <context:component-scan base-package="com.trc.web.validation.**" />
+  <context:component-scan base-package="com.trc.util.logger.**" scoped-proxy="targetClass" />
+  <context:component-scan base-package="com.trc.web.session.**" />
+</beans>
