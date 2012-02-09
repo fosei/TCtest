@@ -5,11 +5,16 @@
 	<classpathentry kind="src" path="src_admin"/>
 	<classpathentry kind="src" path="src_logging"/>
 	<classpathentry kind="src" path="src_jms"/>
-	<classpathentry kind="src" path="WebContent/WEB-INF/resources"/>
+	<classpathentry kind="src" path="WebContent/WEB-INF/resources">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="H:/git/TruConnect/TruConnect/WebContent/WEB-INF/resources"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src_config"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/com.sun.enterprise.jst.server.runtimeTarget/GlassFish Server Open Source Edition 3 (Java EE 6)"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.6.0_27"/>
+	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/com.sun.enterprise.jst.server.runtimeTarget/GlassFish 3.1"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
