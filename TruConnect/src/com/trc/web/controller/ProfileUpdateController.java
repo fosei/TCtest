@@ -124,7 +124,7 @@ public class ProfileUpdateController {
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN')")  
   @RequestMapping(value = "/adminEmail", method = RequestMethod.POST)
-  public ModelAndView adminUpdateEmail(HttpSession session, @ModelAttribute UpdateEmail updateEmail,
+  public ModelAndView adminUpdateEmail(@ModelAttribute UpdateEmail updateEmail,
     BindingResult result) throws AccountManagementException {
     ResultModel model = new ResultModel("profile/update/emailSuccess", "profile/update/adminEmail");
     User user = userManager.getCurrentUser();
@@ -174,7 +174,7 @@ public class ProfileUpdateController {
   @SuppressWarnings("static-access")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
   @RequestMapping(value = "/adminPassword", method = RequestMethod.POST)
-  public ModelAndView postUpdateAdminPassword(HttpSession session, @ModelAttribute UpdatePassword updatePassword,
+  public ModelAndView postUpdateAdminPassword(@ModelAttribute UpdatePassword updatePassword,
       BindingResult result) {
     ResultModel model = new ResultModel("profile/update/passwordSuccess", "profile/update/adminPassword");
     User user = userManager.getCurrentUser();
@@ -192,7 +192,7 @@ public class ProfileUpdateController {
   @SuppressWarnings("static-access")
   @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
   @RequestMapping(value = "/generatePassword", method = RequestMethod.GET)
-  public ModelAndView generatePassword(HttpSession session, @ModelAttribute UpdatePassword updatePassword,
+  public ModelAndView generatePassword(@ModelAttribute UpdatePassword updatePassword,
 	      BindingResult result) { 
 	ResultModel model = new ResultModel("profile/update/passwordSuccess");
 	User user = userManager.getCurrentUser();
@@ -210,7 +210,7 @@ public class ProfileUpdateController {
   
   @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
   @RequestMapping(value = "/generatePassword", method = RequestMethod.POST)
-  public ModelAndView postGeneratePassword(HttpSession session, @ModelAttribute UpdatePassword updatePassword,
+  public ModelAndView postGeneratePassword(@ModelAttribute UpdatePassword updatePassword,
       BindingResult result) {
     ResultModel model = new ResultModel("profile/update/passwordSuccess");
     model.addObject("password", updatePassword.getPassword());
