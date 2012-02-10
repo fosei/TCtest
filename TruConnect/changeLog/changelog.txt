@@ -1,3 +1,9 @@
+2.8.1.1
+-------------------------------------------------------------
+- added functionality to allow admins to change usernames
+  and passwords
+
+
 2.8.0.1
 -------------------------------------------------------------
 - removed temporary check for the string "tru" in coupon validation
