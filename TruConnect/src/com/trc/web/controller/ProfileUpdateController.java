@@ -114,7 +114,7 @@ public class ProfileUpdateController {
     return "redirect:/profile";
   }
 
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
   @RequestMapping(value = "/adminEmail", method = RequestMethod.GET)
   public ModelAndView adminUpdateEmail() {
     ResultModel model = new ResultModel("profile/update/adminEmail");
@@ -122,7 +122,7 @@ public class ProfileUpdateController {
     return model.getSuccess();
   }
   
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")  
+  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")  
   @RequestMapping(value = "/adminEmail", method = RequestMethod.POST)
   public ModelAndView adminUpdateEmail(@ModelAttribute UpdateEmail updateEmail,
     BindingResult result) throws AccountManagementException {
@@ -163,7 +163,7 @@ public class ProfileUpdateController {
 	    }
   }
   
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
   @RequestMapping(value = "/adminPassword", method = RequestMethod.GET)
   public ModelAndView updateAdminPassword() {
 	ResultModel model = new ResultModel("profile/update/adminPassword");
@@ -172,7 +172,7 @@ public class ProfileUpdateController {
   }
   
   @SuppressWarnings("static-access")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
   @RequestMapping(value = "/adminPassword", method = RequestMethod.POST)
   public ModelAndView postUpdateAdminPassword(@ModelAttribute UpdatePassword updatePassword,
       BindingResult result) {
@@ -190,7 +190,7 @@ public class ProfileUpdateController {
   }
   
   @SuppressWarnings("static-access")
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
   @RequestMapping(value = "/generatePassword", method = RequestMethod.GET)
   public ModelAndView generatePassword(@ModelAttribute UpdatePassword updatePassword,
 	      BindingResult result) { 
@@ -208,7 +208,7 @@ public class ProfileUpdateController {
     return model.getSuccess();
   }
   
-  @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+  @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
   @RequestMapping(value = "/generatePassword", method = RequestMethod.POST)
   public ModelAndView postGeneratePassword(@ModelAttribute UpdatePassword updatePassword,
       BindingResult result) {

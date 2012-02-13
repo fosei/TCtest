@@ -76,19 +76,19 @@
 
           <span class="span-6" style="line-height: 36px;">E-Mail Address:</span> <span class="span-8"
             style="line-height: 36px;">${user.email}</span> 
-            <sec:authorize ifAnyGranted="ROLE_ADMIN">
+            <sec:authorize ifAnyGranted="ROLE_SUPER_ADMIN">
             	<a href="<spring:url value="/profile/update/adminEmail"/>" class="button semi-s"><span>Change</span> </a>
             </sec:authorize>
-            <sec:authorize ifNotGranted="ROLE_ADMIN">
+            <sec:authorize ifNotGranted="ROLE_SUPER_ADMIN">
             	<a href="<spring:url value="/profile/update/email"/>" class="button semi-s"><span>Change</span> </a>
             </sec:authorize>            
           <div class="clear"></div>
           <span class="span-6" style="line-height: 36px;">Password:</span> <span class="span-8"
             style="line-height: 36px;">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</span> 
-            <sec:authorize ifAnyGranted="ROLE_ADMIN">
+            <sec:authorize ifAnyGranted="ROLE_SUPER_ADMIN">
             	<a href="<spring:url value="/profile/update/adminPassword"/>" class="button semi-s"><span>Change</span> </a>
             </sec:authorize>
-            <sec:authorize ifNotGranted="ROLE_ADMIN">
+            <sec:authorize ifNotGranted="ROLE_SUPER_ADMIN">
             	<a href="<spring:url value="/profile/update/password"/>" class="button semi-s"><span>Change</span> </a>
             </sec:authorize>  
         </div>
