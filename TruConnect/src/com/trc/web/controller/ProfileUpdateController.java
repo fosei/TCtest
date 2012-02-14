@@ -115,18 +115,18 @@ public class ProfileUpdateController {
   }
 
   @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-  @RequestMapping(value = "/adminEmail", method = RequestMethod.GET)
+  @RequestMapping(value = "/it/adminEmail", method = RequestMethod.GET)
   public ModelAndView adminUpdateEmail() {
-    ResultModel model = new ResultModel("profile/update/adminEmail");
+    ResultModel model = new ResultModel("profile/update/it/adminEmail");
     model.addObject("updateEmail", new UpdateEmail());
     return model.getSuccess();
   }
   
   @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")  
-  @RequestMapping(value = "/adminEmail", method = RequestMethod.POST)
+  @RequestMapping(value = "/it/adminEmail", method = RequestMethod.POST)
   public ModelAndView adminUpdateEmail(@ModelAttribute UpdateEmail updateEmail,
     BindingResult result) throws AccountManagementException {
-    ResultModel model = new ResultModel("profile/update/emailSuccess", "profile/update/adminEmail");
+    ResultModel model = new ResultModel("profile/update/it/emailSuccess", "profile/update/it/adminEmail");
     User user = userManager.getCurrentUser();
     userValidator.checkEmail(updateEmail.getEmail(), result);
     if (result.hasErrors()) {
@@ -164,19 +164,19 @@ public class ProfileUpdateController {
   }
   
   @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-  @RequestMapping(value = "/adminPassword", method = RequestMethod.GET)
+  @RequestMapping(value = "/it/adminPassword", method = RequestMethod.GET)
   public ModelAndView updateAdminPassword() {
-	ResultModel model = new ResultModel("profile/update/adminPassword");
+	ResultModel model = new ResultModel("profile/update/it/adminPassword");
     model.addObject("updatePassword", new UpdatePassword());
     return model.getSuccess();
   }
   
   @SuppressWarnings("static-access")
   @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-  @RequestMapping(value = "/adminPassword", method = RequestMethod.POST)
+  @RequestMapping(value = "/it/adminPassword", method = RequestMethod.POST)
   public ModelAndView postUpdateAdminPassword(@ModelAttribute UpdatePassword updatePassword,
       BindingResult result) {
-    ResultModel model = new ResultModel("profile/update/passwordSuccess", "profile/update/adminPassword");
+    ResultModel model = new ResultModel("profile/update/it/passwordSuccess", "profile/update/it/adminPassword");
     User user = userManager.getCurrentUser();
     userValidator.checkPassword(updatePassword.getPassword(), result);
     if (result.hasErrors()) {
@@ -191,10 +191,10 @@ public class ProfileUpdateController {
   
   @SuppressWarnings("static-access")
   @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-  @RequestMapping(value = "/generatePassword", method = RequestMethod.GET)
+  @RequestMapping(value = "/it/generatePassword", method = RequestMethod.GET)
   public ModelAndView generatePassword(@ModelAttribute UpdatePassword updatePassword,
 	      BindingResult result) { 
-	ResultModel model = new ResultModel("profile/update/passwordSuccess");
+	ResultModel model = new ResultModel("profile/update/it/passwordSuccess");
 	User user = userManager.getCurrentUser();
     String genPassword; 
     do{
@@ -209,10 +209,10 @@ public class ProfileUpdateController {
   }
   
   @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN')")
-  @RequestMapping(value = "/generatePassword", method = RequestMethod.POST)
+  @RequestMapping(value = "/it/generatePassword", method = RequestMethod.POST)
   public ModelAndView postGeneratePassword(@ModelAttribute UpdatePassword updatePassword,
       BindingResult result) {
-    ResultModel model = new ResultModel("profile/update/passwordSuccess");
+    ResultModel model = new ResultModel("profile/update/it/passwordSuccess");
     model.addObject("password", updatePassword.getPassword());
     return model.getSuccess();
     

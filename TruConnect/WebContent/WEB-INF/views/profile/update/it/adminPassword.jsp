@@ -39,7 +39,7 @@
           <div class="row">
             <form:label path="password" cssClass="required">New Password</form:label>
             <form:input path="password" cssClass="span-8" id="password" name="password" cssErrorClass="span-8 validationFailed" />
-             <a href="<spring:url value="/profile/update/generatePassword" />" class="button escape-s"  onclick="generatePassword()"><span>Generate Password</span></a>        
+             <a href="<spring:url value="/profile/update/it/generatePassword" />" class="button escape-s"  onclick="generatePassword()"><span>Generate Password</span></a>        
           </div>
 
           <!-- Buttons -->

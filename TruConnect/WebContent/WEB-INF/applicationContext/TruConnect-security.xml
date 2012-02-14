@@ -28,6 +28,7 @@
     <intercept-url pattern="/manage" access="permitAll" />
     <intercept-url pattern="/retrieve/**" access="permitAll" />
     <intercept-url pattern="/admin/**" access="hasAnyRole('ROLE_ADMIN', 'ROLE_MANAGER')" />
+    <intercept-url pattern="/it/**" access="hasAnyRole('ROLE_SUPER_ADMIN')" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
     <access-denied-handler error-page="/exception/accessDenied.jsp" />
     <logout invalidate-session="true" logout-success-url="http://www.truconnect.com/" />
